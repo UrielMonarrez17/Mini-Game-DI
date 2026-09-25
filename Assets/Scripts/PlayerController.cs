@@ -1,85 +1,86 @@
+
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public CharacterController cc;
-    [SerializeField] private GameObject player;
-    [SerializeField] private Camera cam;
-    [SerializeField] private float Sensitivity;
-    
-    // Nueva variable para controlar la velocidad de giro con el teclado
-    [SerializeField] private float turnSpeed = 150f; 
-    
-    [SerializeField] private float speed, walk, run, crouch;
+    [Header("Movement")]
+    public float moveSpeed = 5f;
+    public float rotationSpeed = 120f;
+    public float jumpHeight = 1.5f;
+    public float gravity = -9.81f;
 
-    private Vector3 crouchScale;
+    [Header("Camera")]
+    public Transform playerCamera;
+    public float cameraDistance = 4f;
+    public float cameraHeight = 2f;
+    public float cameraAngle = 15f;
 
-    public bool isMoving, isCrouching, isRunning;
+    private CharacterController controller;
+    private float verticalVelocity;
 
-    private float X, Y;
-
-    private void Start()
+    void Start()
     {
-        speed = walk;
-        crouchScale = new Vector3(1, .75f, 1);
-        cc = GetComponent<CharacterController>();
-        cc.enabled = true;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        controller = GetComponent<CharacterController>();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        UpdateCamera();
     }
-    private void Update()
+
+    void Update()
     {
-        // Obtenemos los inputs al inicio para usarlos en rotación y movimiento
-        float horizontal = Input.GetAxis("Horizontal"); // Teclas A y D
-        float vertical = Input.GetAxis("Vertical");     // Teclas W y S
+        MovePlayer();
+        UpdateCamera();
+    }
 
-        #region Camera Limitation Calculator
-        //Camera limitation variables
-        const float MIN_Y = -60.0f;
-        const float MAX_Y = 70.0f;
+    void MovePlayer()
+    {
+        float move = 0f;
 
-        // Rotación horizontal: Sumamos tanto el mouse como las teclas A y D
-        X += Input.GetAxis("Mouse X") * (Sensitivity * Time.deltaTime);
-        X += horizontal * (turnSpeed * Time.deltaTime); // <-- Cambio aquí (Giro con A y D)
-        
-        Y -= Input.GetAxis("Mouse Y") * (Sensitivity * Time.deltaTime);
+        if (Input.GetKey(KeyCode.W))
+            move = -1f;
 
-        if (Y < MIN_Y)
-            Y = MIN_Y;
-        else if (Y > MAX_Y)
-            Y = MAX_Y;
-        #endregion
-        
-        transform.localRotation = Quaternion.Euler(Y, X, 0.0f);
+        if (Input.GetKey(KeyCode.S))
+            move = 1f;
 
-        // Movimiento: Ahora solo nos movemos hacia adelante y atrás
-        Vector3 forward = transform.forward * vertical;
+        float rotation = 0f;
 
-        // Se eliminó el vector "right" para que ya no haga "strafe" a los lados
-        cc.SimpleMove(Vector3.Normalize(forward) * speed);
+        if (Input.GetKey(KeyCode.A))
+            rotation = -1f;
 
-        // Determines if the speed = run or walk
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.D))
+            rotation = 1f;
+
+        transform.Rotate(0f,rotation * rotationSpeed * Time.deltaTime,0f);
+
+        if (controller.isGrounded && verticalVelocity < 0f)
         {
-            speed = run;
-            isRunning = true;
+            verticalVelocity = -2f;
         }
-        //Crouch
-        else if (Input.GetKey(KeyCode.LeftControl))
+
+        if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded)
         {
-            isCrouching = true;
-            isRunning = false;
-            speed = crouch;
-            player.transform.localScale = crouchScale;
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
-        else
-        {
-            isRunning = false;
-            isCrouching = false;
-            speed = walk;
-        }
-        // Detects if the player is moving.
-        // Useful if you want footstep sounds and or other features in your game.
-        isMoving = cc.velocity.sqrMagnitude > 0.0f;
+
+        verticalVelocity += gravity * Time.deltaTime;
+
+        Vector3 movement = transform.forward * moveSpeed * move;
+
+        movement.y = verticalVelocity;
+
+        controller.Move(movement * Time.deltaTime);
+    }
+
+    void UpdateCamera()
+    {
+        if (playerCamera == null)
+            return;
+
+        playerCamera.localPosition = new Vector3(0f,cameraHeight,-cameraDistance);
+
+        playerCamera.localRotation = Quaternion.Euler(cameraAngle,0f,0f);
     }
 }

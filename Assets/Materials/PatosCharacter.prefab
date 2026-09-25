@@ -546,17 +546,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 3301721175025396329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fdbc624c8e3b6343a63babe8dd79da9, type: 3}
+  m_Script: {fileID: 11500000, guid: 534c4478aea7a124998c0c38a4bd6735, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
-  rotationSpeed: 120
-  jumpHeight: 1.5
-  gravity: -9.81
-  playerCamera: {fileID: 0}
-  cameraDistance: 4
-  cameraHeight: 1.5
-  cameraAngle: 15
+  cc: {fileID: 38446731356485618}
+  player: {fileID: 3301721175025396329}
+  cam: {fileID: 5827785682844541200}
+  Sensitivity: 0
+  turnSpeed: 150
+  speed: 2
+  walk: 2
+  run: 4
+  crouch: 0
+  isMoving: 0
+  isCrouching: 0
+  isRunning: 0
 --- !u!1 &5258359931664807059
 GameObject:
   m_ObjectHideFlags: 0
