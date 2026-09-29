@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class UrielController : MonoBehaviour
 {
     public CharacterController cc;
     [SerializeField] private GameObject player;
