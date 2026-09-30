@@ -18068,7 +18068,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d89b697c4a2acb44a7e9670c2916ddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSpawner
-  characterPrefab: {fileID: 3775339696953316202, guid: 68cfbf799aefcdf46b521e62569e9596, type: 3}
+  characterPrefab: {fileID: 3775339696953316202, guid: 4b8a682b80a7cf843a09643ad900f4f5, type: 3}
   camera: {fileID: 514818069}
   menu: {fileID: 1677031221}
   spawnPoint: {fileID: 2093892321}
