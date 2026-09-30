@@ -6,6 +6,12 @@ public class CharacterSpawner : MonoBehaviour
     [Header("Character")]
     public GameObject characterPrefab;
 
+    [Header("Camera")]
+    public GameObject camera;
+
+    [Header("Menu")]
+    public GameObject menu;
+
     [Header("Spawn Position")]
     public Transform spawnPoint;
 
@@ -13,6 +19,8 @@ public class CharacterSpawner : MonoBehaviour
 
     public void SpawnCharacter()
     {
+        camera.SetActive(false);
+        menu.SetActive(false);
         if (characterPrefab == null || spawnPoint == null)
         {
             Debug.LogWarning(
@@ -64,6 +72,7 @@ public class CharacterSpawner : MonoBehaviour
                 listener.enabled = true;
             }
         }
+
 
         Debug.Log("Character spawned!");
     }
