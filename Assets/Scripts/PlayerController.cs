@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -32,6 +31,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         MovePlayer();
+    }
+
+    void LateUpdate()
+    {
         UpdateCamera();
     }
 
@@ -53,7 +56,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
             rotation = 1f;
 
-        transform.Rotate(0f,rotation * rotationSpeed * Time.deltaTime,0f);
+        transform.Rotate(0f, rotation * rotationSpeed * Time.deltaTime, 0f);
 
         if (controller.isGrounded && verticalVelocity < 0f)
         {
@@ -74,13 +77,13 @@ public class PlayerController : MonoBehaviour
         controller.Move(movement * Time.deltaTime);
     }
 
-    void UpdateCamera()
-    {
-        if (playerCamera == null)
-            return;
+   void UpdateCamera()
+{
+    if (playerCamera == null)
+        return;
 
-        playerCamera.localPosition = new Vector3(0f,cameraHeight,-cameraDistance);
-
-        playerCamera.localRotation = Quaternion.Euler(cameraAngle,0f,0f);
-    }
+    Vector3 offset = transform.rotation * new Vector3(0f, cameraHeight, cameraDistance);
+    playerCamera.position = transform.position + offset;
+    playerCamera.rotation = Quaternion.Euler(cameraAngle, transform.eulerAngles.y + 180f, 0f);
+}
 }
